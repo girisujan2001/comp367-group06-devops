@@ -1,0 +1,29 @@
+/* src/components/PostEditor.css */
+#post-editor {
+    max-width: 600px;
+    margin: 2rem auto;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  #post-editor textarea {
+    width: 100%;
+    height: 150px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  #post-editor button {
+    background-color: #007acc;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  
+  #post-editor button:hover {
+    background-color: #005fa3;
+  }
+  

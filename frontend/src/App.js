@@ -9,6 +9,7 @@ function App() {
   // New post state
   const [postContent, setPostContent] = useState('');
   const [postMsg, setPostMsg] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   // Signup handler
   const handleSignup = async () => {
@@ -24,8 +25,10 @@ function App() {
   // New post handler (mock)
   const handlePostSubmit = () => {
     // TODO: Replace with real API call
-    setPostMsg(`Post submitted: "${postContent}"`);
+    const fileName = imageFile ? imageFile.name : 'no image';
+    setPostMsg(`Post submitted: "${postContent}" with image: ${fileName}`);
     setPostContent('');
+    setImageFile(null);
   };
 
   return (
@@ -55,6 +58,12 @@ function App() {
           rows={4}
           value={postContent}
           onChange={e => setPostContent(e.target.value)}
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={e => setImageFile(e.target.files[0])}
+          style={{ marginBottom: '0.5rem' }}
         />
         <button className="button" onClick={handlePostSubmit}>
           Submit Post

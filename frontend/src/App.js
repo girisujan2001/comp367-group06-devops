@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -10,6 +10,9 @@ function App() {
   const [postContent, setPostContent] = useState('');
   const [postMsg, setPostMsg] = useState('');
   const [imageFile, setImageFile] = useState(null);
+
+  // Posts list state
+  const [posts, setPosts] = useState([]);
 
   // Signup handler
   const handleSignup = async () => {
@@ -29,7 +32,25 @@ function App() {
     setPostMsg(`Post submitted: "${postContent}" with image: ${fileName}`);
     setPostContent('');
     setImageFile(null);
+    // Reload posts if using real API:
+    // loadPosts();
   };
+
+  // Load posts from backend
+  const loadPosts = async () => {
+    try {
+      const res = await fetch('http://localhost:4000/api/posts');
+      const data = await res.json();
+      setPosts(data);
+    } catch (err) {
+      console.error('Failed to load posts', err);
+    }
+  };
+
+  // Fetch posts on component mount
+  useEffect(() => {
+    loadPosts();
+  }, []);
 
   return (
     <div className="container">
@@ -69,6 +90,27 @@ function App() {
           Submit Post
         </button>
         {postMsg && <p className="message">{postMsg}</p>}
+      </section>
+
+      {/* Posts List Section */}
+      <section className="section">
+        <h2>All Posts</h2>
+        {posts.length === 0 ? (
+          <p className="message">No posts yet.</p>
+        ) : (
+          posts.map(p => (
+            <div key={p.id} className="post-item">
+              <p>{p.content}</p>
+              {p.image && (
+                <img
+                  src={p.image}          /* If you send back a URL, otherwise mock */
+                  alt="Post attachment"
+                  width="200"
+                />
+              )}
+            </div>
+          ))
+        )}
       </section>
     </div>
   );

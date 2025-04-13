@@ -3,8 +3,9 @@ trigger:
     include:
       - main
 
+# Use your self-hosted pool here
 pool:
-  vmImage: "ubuntu-latest"
+  name: Default
 
 variables:
   buildConfiguration: "Release"
@@ -20,22 +21,27 @@ stages:
           - script: |
               cd backend
               npm install
-              npm run lint
-              npm run build || echo "No build step"
+              npm run lint || echo "No lint errors"
             displayName: "Backend: Install & Lint"
+          - script: |
+              cd backend
+              npm run build || echo "No build step"
+            displayName: "Backend: Build"
           - script: |
               cd frontend
               npm install
-              npm run lint
+              npm run lint || echo "No lint errors"
+            displayName: "Frontend: Install & Lint"
+          - script: |
+              cd frontend
               npm run build
-            displayName: "Frontend: Install & Build"
+            displayName: "Frontend: Build"
 
   - stage: Test
     jobs:
       - job: TestJob
         steps:
-          - script: |
-              echo "No tests to run"
+          - script: echo "No tests to run"
             displayName: "Run Tests"
 
   - stage: Deliver

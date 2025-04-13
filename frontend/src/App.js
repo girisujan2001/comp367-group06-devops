@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';
 
 function App() {
   // Signup state
@@ -28,37 +29,37 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+    <div className="container">
       {/* Signup Section */}
-      <section style={{ marginBottom: '2rem' }}>
+      <section className="section">
         <h1>Signup</h1>
         <input
+          className="input"
           type="text"
           placeholder="Username"
           value={username}
           onChange={e => setUsername(e.target.value)}
-          style={{ padding: '0.5rem', width: '100%', marginBottom: '0.5rem' }}
         />
-        <button onClick={handleSignup} style={{ padding: '0.5rem 1rem' }}>
+        <button className="button" onClick={handleSignup}>
           Sign Up
         </button>
-        {msg && <p style={{ marginTop: '1rem' }}>{msg}</p>}
+        {msg && <p className="message">{msg}</p>}
       </section>
 
       {/* New Post Section */}
-      <section>
+      <section className="section">
         <h2>New Post</h2>
         <textarea
+          className="textarea"
           placeholder="Write your post here…"
           rows={4}
           value={postContent}
           onChange={e => setPostContent(e.target.value)}
-          style={{ padding: '0.5rem', width: '100%', marginBottom: '0.5rem' }}
         />
-        <button onClick={handlePostSubmit} style={{ padding: '0.5rem 1rem' }}>
+        <button className="button" onClick={handlePostSubmit}>
           Submit Post
         </button>
-        {postMsg && <p style={{ marginTop: '1rem' }}>{postMsg}</p>}
+        {postMsg && <p className="message">{postMsg}</p>}
       </section>
     </div>
   );

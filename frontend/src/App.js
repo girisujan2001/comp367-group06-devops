@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
@@ -10,6 +10,12 @@ function App() {
   const [postContent, setPostContent] = useState('');
   const [postMsg, setPostMsg] = useState('');
   const [imageFile, setImageFile] = useState(null);
+
+  // Posts list state
+  const [posts, setPosts] = useState([]);
+
+  // Comment feedback
+  const [commentMsg, setCommentMsg] = useState('');
 
   // Signup handler
   const handleSignup = async () => {
@@ -24,12 +30,34 @@ function App() {
 
   // New post handler (mock)
   const handlePostSubmit = () => {
-    // TODO: Replace with real API call
     const fileName = imageFile ? imageFile.name : 'no image';
     setPostMsg(`Post submitted: "${postContent}" with image: ${fileName}`);
     setPostContent('');
     setImageFile(null);
+    // loadPosts(); // uncomment if you connect to real API
   };
+
+  // Load posts from backend
+  const loadPosts = async () => {
+    try {
+      const res = await fetch('http://localhost:4000/api/posts');
+      const data = await res.json();
+      setPosts(data);
+    } catch (err) {
+      console.error('Failed to load posts', err);
+    }
+  };
+
+  // Comment submit handler (mock)
+  const handleCommentSubmit = (postId, text) => {
+    setCommentMsg(`Comment on post ${postId}: "${text}" submitted.`);
+    setTimeout(() => setCommentMsg(''), 3000);
+  };
+
+  // Fetch posts on mount
+  useEffect(() => {
+    loadPosts();
+  }, []);
 
   return (
     <div className="container">
@@ -69,6 +97,42 @@ function App() {
           Submit Post
         </button>
         {postMsg && <p className="message">{postMsg}</p>}
+        {commentMsg && <p className="message">{commentMsg}</p>}
+      </section>
+
+      {/* Posts List Section */}
+      <section className="section">
+        <h2>All Posts</h2>
+        {posts.length === 0 ? (
+          <p className="message">No posts yet.</p>
+        ) : (
+          posts.map(p => (
+            <div key={p.id} className="post-item">
+              <p>{p.content}</p>
+              {p.image && (
+                <img
+                  src={p.image}
+                  alt="Post attachment"
+                  width="200"
+                />
+              )}
+              {/* Comment Input */}
+              <div className="comment-section">
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Add a comment…"
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && e.target.value.trim()) {
+                      handleCommentSubmit(p.id, e.target.value.trim());
+                      e.target.value = '';
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          ))
+        )}
       </section>
     </div>
   );

@@ -20,11 +20,12 @@ app.use(bodyParser.json());
 app.locals.posts = [];
 app.locals.comments = [];
 
-// Routes
+// Routers
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/comments', commentsRouter);
 
+// Health check
 app.get('/', (req, res) => {
   res.send('Backend is running');
 });

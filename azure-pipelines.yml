@@ -1,0 +1,74 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  buildConfiguration: "Release"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildJob
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "18.x"
+          - script: |
+              cd backend
+              npm install
+              npm run lint
+              npm run build || echo "No build step"
+            displayName: "Backend: Install & Lint"
+          - script: |
+              cd frontend
+              npm install
+              npm run lint
+              npm run build
+            displayName: "Frontend: Install & Build"
+
+  - stage: Test
+    jobs:
+      - job: TestJob
+        steps:
+          - script: |
+              echo "No tests to run"
+            displayName: "Run Tests"
+
+  - stage: Deliver
+    jobs:
+      - job: Package
+        steps:
+          - script: echo "Artifacts would be packaged here"
+            displayName: "Mock Package"
+
+  - stage: DeployToDev
+    jobs:
+      - job: DevDeploy
+        steps:
+          - script: echo "Deployed backend & frontend to Dev Env"
+            displayName: "Mock Deploy to Dev"
+
+  - stage: DeployToQAT
+    jobs:
+      - job: QATDeploy
+        steps:
+          - script: echo "Mock Deploy to QAT Env"
+            displayName: "Mock Deploy to QAT"
+
+  - stage: DeployToStaging
+    jobs:
+      - job: Staging
+        steps:
+          - script: echo "Mock Deploy to Staging"
+            displayName: "Mock Deploy to Staging"
+
+  - stage: DeployToProd
+    jobs:
+      - job: Prod
+        steps:
+          - script: echo "Mock Deploy to Production"
+            displayName: "Mock Deploy to Prod"

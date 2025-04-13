@@ -3,9 +3,8 @@ trigger:
     include:
       - main
 
-# Use your self-hosted pool here
 pool:
-  name: Default
+  name: Default  # your self‑hosted agent pool
 
 variables:
   buildConfiguration: "Release"
@@ -18,23 +17,28 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: "18.x"
+
           - script: |
               cd backend
               npm install
               npm run lint || echo "No lint errors"
             displayName: "Backend: Install & Lint"
+
           - script: |
               cd backend
-              npm run build || echo "No build step for backend"
+              npm run build
             displayName: "Backend: Build (optional)"
+            continueOnError: true
+
           - script: |
               cd frontend
               npm install
               npm run lint || echo "No lint errors"
             displayName: "Frontend: Install & Lint"
+
           - script: |
               cd frontend
-              npm run build || echo "Frontend build failed"
+              npm run build
             displayName: "Frontend: Build"
 
   - stage: Test

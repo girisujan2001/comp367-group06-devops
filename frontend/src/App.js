@@ -28,15 +28,6 @@ function App() {
     setMsg(data.message);
   };
 
-  // New post handler (mock)
-  const handlePostSubmit = () => {
-    const fileName = imageFile ? imageFile.name : 'no image';
-    setPostMsg(`Post submitted: "${postContent}" with image: ${fileName}`);
-    setPostContent('');
-    setImageFile(null);
-    // loadPosts(); // uncomment if you connect to real API
-  };
-
   // Load posts from backend
   const loadPosts = async () => {
     try {
@@ -46,6 +37,15 @@ function App() {
     } catch (err) {
       console.error('Failed to load posts', err);
     }
+  };
+
+  // New post handler
+  const handlePostSubmit = () => {
+    const fileName = imageFile ? imageFile.name : 'no image';
+    setPostMsg(`Post submitted: "${postContent}" with image: ${fileName}`);
+    setPostContent('');
+    setImageFile(null);
+    loadPosts(); // refresh posts list immediately
   };
 
   // Comment submit handler (mock)

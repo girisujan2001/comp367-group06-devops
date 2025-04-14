@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  name: Default  # your self‑hosted agent pool
+  name: Self-hosted  # your self‑hosted agent pool
 
 variables:
   buildConfiguration: "Release"

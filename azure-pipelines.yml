@@ -40,6 +40,28 @@ stages:
               npm run build
             displayName: "Frontend: Build"
 
+          # Copy build outputs to artifact staging directory
+          - script: |
+              mkdir -p $(Build.ArtifactStagingDirectory)/backend
+              mkdir -p $(Build.ArtifactStagingDirectory)/frontend
+              cp -r backend/dist/* $(Build.ArtifactStagingDirectory)/backend/ || echo "No backend dist files"
+              cp -r frontend/dist/* $(Build.ArtifactStagingDirectory)/frontend/ || echo "No frontend dist files"
+            displayName: "Copy Build Outputs"
+
+          # Verify artifacts before publishing
+          - script: |
+              ls -R $(Build.ArtifactStagingDirectory)
+              echo "Artifacts staged at: $(Build.ArtifactStagingDirectory)"
+            displayName: "Verify Artifacts"
+
+          # Publish artifact with the correct name
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: $(Build.ArtifactStagingDirectory)
+              ArtifactName: 'comp367-devops-project'
+              publishLocation: 'Container'
+            displayName: 'Publish Artifacts'
+
   - stage: Test
     jobs:
       - job: TestJob
@@ -60,6 +82,14 @@ stages:
     jobs:
       - job: DevDeploy
         steps:
+          # Download the artifact with the correct name
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              artifactName: 'comp367-devops-project'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for Dev Deploy'
           - script: |
               echo "Deployed backend & frontend to Dev Env"
             displayName: "Mock Deploy to Dev"
@@ -68,6 +98,13 @@ stages:
     jobs:
       - job: QATDeploy
         steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              artifactName: 'comp367-devops-project'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for QAT Deploy'
           - script: |
               echo "Mock Deploy to QAT Env"
             displayName: "Mock Deploy to QAT"
@@ -76,6 +113,13 @@ stages:
     jobs:
       - job: Staging
         steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              artifactName: 'comp367-devops-project'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for Staging Deploy'
           - script: |
               echo "Mock Deploy to Staging"
             displayName: "Mock Deploy to Staging"
@@ -84,6 +128,13 @@ stages:
     jobs:
       - job: Prod
         steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              artifactName: 'comp367-devops-project'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for Prod Deploy'
           - script: |
               echo "Mock Deploy to Production"
             displayName: "Mock Deploy to Prod"

@@ -48,6 +48,12 @@ stages:
               publishLocation: 'Container'
             displayName: 'Publish Artifacts'
 
+          # Optional: Check contents of artifact directory to verify files are present
+          - script: |
+              echo "Checking the contents of the artifact directory"
+              dir $(Build.ArtifactStagingDirectory)
+            displayName: 'Check Artifact Directory Contents'
+
   - stage: Test
     jobs:
       - job: TestJob
@@ -72,6 +78,7 @@ stages:
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
+              artifactName: 'drop'  # Specify the artifact name here
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for Dev Deploy'
@@ -87,6 +94,7 @@ stages:
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
+              artifactName: 'drop'  # Specify the artifact name here
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for QAT Deploy'
@@ -102,6 +110,7 @@ stages:
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
+              artifactName: 'drop'  # Specify the artifact name here
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for Staging Deploy'
@@ -117,6 +126,7 @@ stages:
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
+              artifactName: 'drop'  # Specify the artifact name here
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for Prod Deploy'

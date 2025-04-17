@@ -40,19 +40,13 @@ stages:
               npm run build
             displayName: "Frontend: Build"
 
-          # Add artifact publishing task here
+          # Publish artifact with the correct name
           - task: PublishBuildArtifacts@1
             inputs:
               PathtoPublish: $(Build.ArtifactStagingDirectory)
-              ArtifactName: 'drop'
+              ArtifactName: 'comp367-devops-project'  # Correct artifact name
               publishLocation: 'Container'
             displayName: 'Publish Artifacts'
-
-          # Optional: Check contents of artifact directory to verify files are present
-          - script: |
-              echo "Checking the contents of the artifact directory"
-              dir $(Build.ArtifactStagingDirectory)
-            displayName: 'Check Artifact Directory Contents'
 
   - stage: Test
     jobs:
@@ -74,11 +68,11 @@ stages:
     jobs:
       - job: DevDeploy
         steps:
-          # Download the artifact in deploy stage
+          # Download the artifact with the correct name
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
-              artifactName: 'drop'  # Specify the artifact name here
+              artifactName: 'comp367-devops-project'  # Correct artifact name
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for Dev Deploy'
@@ -90,11 +84,11 @@ stages:
     jobs:
       - job: QATDeploy
         steps:
-          # Download the artifact in deploy stage
+          # Download the artifact with the correct name
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
-              artifactName: 'drop'  # Specify the artifact name here
+              artifactName: 'comp367-devops-project'  # Correct artifact name
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for QAT Deploy'
@@ -106,11 +100,11 @@ stages:
     jobs:
       - job: Staging
         steps:
-          # Download the artifact in deploy stage
+          # Download the artifact with the correct name
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
-              artifactName: 'drop'  # Specify the artifact name here
+              artifactName: 'comp367-devops-project'  # Correct artifact name
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for Staging Deploy'
@@ -122,11 +116,11 @@ stages:
     jobs:
       - job: Prod
         steps:
-          # Download the artifact in deploy stage
+          # Download the artifact with the correct name
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
-              artifactName: 'drop'  # Specify the artifact name here
+              artifactName: 'comp367-devops-project'  # Correct artifact name
               downloadType: 'single'
               downloadPath: '$(Pipeline.Workspace)'
             displayName: 'Download Artifacts for Prod Deploy'

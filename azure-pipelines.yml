@@ -40,6 +40,14 @@ stages:
               npm run build
             displayName: "Frontend: Build"
 
+          # Add artifact publishing task here
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: $(Build.ArtifactStagingDirectory)
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+            displayName: 'Publish Artifacts'
+
   - stage: Test
     jobs:
       - job: TestJob
@@ -60,6 +68,13 @@ stages:
     jobs:
       - job: DevDeploy
         steps:
+          # Download the artifact in deploy stage
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for Dev Deploy'
           - script: |
               echo "Deployed backend & frontend to Dev Env"
             displayName: "Mock Deploy to Dev"
@@ -68,6 +83,13 @@ stages:
     jobs:
       - job: QATDeploy
         steps:
+          # Download the artifact in deploy stage
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for QAT Deploy'
           - script: |
               echo "Mock Deploy to QAT Env"
             displayName: "Mock Deploy to QAT"
@@ -76,6 +98,13 @@ stages:
     jobs:
       - job: Staging
         steps:
+          # Download the artifact in deploy stage
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for Staging Deploy'
           - script: |
               echo "Mock Deploy to Staging"
             displayName: "Mock Deploy to Staging"
@@ -84,6 +113,13 @@ stages:
     jobs:
       - job: Prod
         steps:
+          # Download the artifact in deploy stage
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              downloadPath: '$(Pipeline.Workspace)'
+            displayName: 'Download Artifacts for Prod Deploy'
           - script: |
               echo "Mock Deploy to Production"
             displayName: "Mock Deploy to Prod"
